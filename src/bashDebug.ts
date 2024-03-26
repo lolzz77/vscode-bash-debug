@@ -13,7 +13,9 @@ import { getWSLPath, reverseWSLPath, escapeCharactersInBashdbArg, getWSLLauncher
 import { EventSource } from './eventSource';
 import { spawnBashScript } from './spawnBash';
 import { quote } from 'shell-quote'
-
+// i think this file plays important role
+// if you go to package.json, search for ./out/bashDebug.js
+// try trigger it by `nodejs ./out/bashDebug.js`
 export interface LaunchRequestArguments extends DebugProtocol.LaunchRequestArguments {
 
     // Non-optional arguments are guaranteed to be defined in extension.ts: resolveDebugConfiguration().

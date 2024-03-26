@@ -27,6 +27,8 @@
 # quirky so sadly this script seems to be needed more than it would
 # normally.
 
+# Here is bashdb script
+
 # Name we refer to ourselves by
 typeset _Dbg_debugger_name='bashdb'
 
