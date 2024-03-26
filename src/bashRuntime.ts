@@ -80,6 +80,8 @@ export function validatePath(cwd: string,
             if (process.platform.toString() === "win32") {
                 return `Error: WSL bash (mandatory on Windows) is not found. (pathBash: ${pathBash})` + stderrContent;
             } else {
+                // after making `config.pathBash = "make -f";`
+                // here prints out the error
                 return `Error: bash not found. (pathBash: ${pathBash})` + stderrContent;
             }
         }

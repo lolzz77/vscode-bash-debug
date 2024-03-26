@@ -105,7 +105,7 @@ class BashConfigurationProvider implements vscode.DebugConfigurationProvider {
             config.cwd = folder.uri.fsPath;
         }
         if (!config.pathBash) {
-            config.pathBash = "make";
+            config.pathBash = "make -f";
         }
         if (!config.pathBashdb) {
             if (process.platform === "win32") {
