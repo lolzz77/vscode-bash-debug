@@ -29,7 +29,7 @@ export function _validatePath(cwd: string,
             // Means that execute not possible, try and chmod it
         }
     }
-
+    // here gives the arguments
     const proc = spawnBashScriptSync(
         ((chmod_bashdb) ? `chmod +x "${pathBashdb}" || exit ${vpr.cannotChmod};` : ``) +
         `type "${pathBashdb}" || exit ${vpr.notFoundBashdb};` +
@@ -58,7 +58,11 @@ export function _validatePath(cwd: string,
 
 export function validatePath(cwd: string,
     pathBash: string, pathBashdb: string, pathCat: string, pathMkfifo: string, pathPkill: string): string {
-
+    // i dk how to debug here, it wont pause here
+    // then i tried `console.log()` it also wont print in console
+    // but i can do is `return `${pathBash}``
+    // lol
+    // return `${pathBash} + ${pathBashdb} + ${pathCat} + ${pathMkfifo} + ${pathPkill}`
     const rc = _validatePath(cwd, pathBash, pathBashdb, pathCat, pathMkfifo, pathPkill);
 
     const askReport = `If it is reproducible, please report it to https://github.com/rogalmic/vscode-bash-debug/issues.`;
