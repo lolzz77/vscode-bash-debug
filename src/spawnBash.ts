@@ -27,6 +27,6 @@ export function spawnBashScript(scriptCode: string, pathBash: string, outputHand
 export function spawnBashScriptSync(scriptCode: string, pathBash: string, spawnTimeout: number): SpawnSyncReturns<Buffer> {
     const currentShell = (process.platform === "win32") ? getWSLLauncherPath(false) : pathBash;
     const optionalBashPathArgument = (currentShell !== pathBash) ? pathBash : "";
-
-    return spawnSync(currentShell, [optionalBashPathArgument, "-c", scriptCode].filter(arg => arg !== ""), { timeout: spawnTimeout, shell: false });
+    // here fix the error invalid arguement `-c` is given
+    return spawnSync(currentShell, [optionalBashPathArgument, "-f", scriptCode].filter(arg => arg !== ""), { timeout: spawnTimeout, shell: false });
 }
