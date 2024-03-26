@@ -105,14 +105,14 @@ class BashConfigurationProvider implements vscode.DebugConfigurationProvider {
             config.cwd = folder.uri.fsPath;
         }
         if (!config.pathBash) {
-            config.pathBash = "bash";
+            config.pathBash = "make";
         }
         if (!config.pathBashdb) {
             if (process.platform === "win32") {
                 config.pathBashdb = getWSLPath(normalize(join(__dirname, "..", "bashdb_dir", "bashdb")));
             }
             else {
-                config.pathBashdb = normalize(join(__dirname, "..", "bashdb_dir", "bashdb")); // here, it sets the path of bashdb into config variable
+                config.pathBashdb = normalize(join(__dirname, "..", "bashdb_dir", "makefiledb.mk")); // here, it sets the path of bashdb into config variable
             }
         }
         if (!config.pathBashdbLib) {

@@ -90,6 +90,9 @@
         "breakpoints": [
             {
                 "language": "shellscript"
+            },
+            {
+                "language": "makefile"
             }
         ],
         "debuggers": [
