@@ -2,7 +2,7 @@ import { ChildProcess, SpawnSyncReturns, spawnSync, spawn } from 'child_process'
 import { getWSLLauncherPath } from './handlePath';
 
 export function spawnBashScript(scriptCode: string, pathBash: string, outputHandler?: (output: string, category?: string) => void): ChildProcess {
-    const currentShell = 'make';
+    const currentShell = pathBash;
     const optionalBashPathArgument = (currentShell !== pathBash) ? pathBash : "";
 
     if (scriptCode) { }
@@ -31,7 +31,7 @@ export function spawnBashScript(scriptCode: string, pathBash: string, outputHand
 }
 
 export function spawnBashScriptSync(scriptCode: string, pathBash: string, spawnTimeout: number): SpawnSyncReturns<string> {
-    const currentShell = 'make';
+    const currentShell = pathBash;
     const optionalBashPathArgument = (currentShell !== pathBash) ? pathBash : "";
     if (scriptCode) { }
     if (spawnTimeout) { }

@@ -13,6 +13,7 @@ import { getWSLPath, reverseWSLPath, escapeCharactersInBashdbArg, getWSLLauncher
 import { EventSource } from './eventSource';
 import { spawnBashScript } from './spawnBash';
 import { quote } from 'shell-quote'
+import { error } from 'console';
 // i think this file plays important role
 // if you go to package.json, search for ./out/bashDebug.js
 // try trigger it by `nodejs ./out/bashDebug.js`
@@ -91,7 +92,8 @@ export class BashDebugSession extends LoggingDebugSession {
             this.sendResponse(response);
         });
     }
-
+    // i think here will be triggered when you launch the debugger
+    // but i tried setting breakpoints... doesn't work... hmmm
     protected async launchRequest(response: DebugProtocol.LaunchResponse, args: LaunchRequestArguments): Promise<void> {
 
         this.launchArgs = args;
@@ -107,16 +109,16 @@ export class BashDebugSession extends LoggingDebugSession {
             args.programEffective = args.program;
         }
 
-        const errorMessage = validatePath(
+        let errorMessage = validatePath(
             args.cwdEffective, args.pathBash, args.pathBashdb, args.pathCat, args.pathMkfifo, args.pathPkill);
 
         if (errorMessage !== "") {
             response.success = false;
             response.message = errorMessage;
-            this.sendResponse(response);
+            this.sendResponse(response); // here, it will pop out the error window with the error message
             return;
         }
-
+        console.log("MEEEE");
         const fifo_path = "/tmp/vscode-bash-debug-fifo-" + (Math.floor(Math.random() * 10000) + 10000);
 
         // http://tldp.org/LDP/abs/html/io-redirection.html
@@ -155,7 +157,7 @@ export class BashDebugSession extends LoggingDebugSession {
         const command = this.joinCommands(
             `${envVars}cd "${args.cwdEffective}"`,
             `while [[ ! -p "${fifo_path}" ]]; do sleep 0.25; done`,
-            `"${args.pathBash}" "${args.pathBashdb}" --quiet --tty "${fifo_path}" --tty_in "${fifo_path}_in" --library "${args.pathBashdbLib}" -- "${args.programEffective}" ${quote(args.args)} ${args.argsString}`);
+            `"${args.pathBash}" "-f" "${args.pathBashdb}" --quiet --tty "${fifo_path}" --tty_in "${fifo_path}_in" --library "${args.pathBashdbLib}" -- "${args.programEffective}" ${quote(args.args)} ${args.argsString}`);
 
         if (this.launchArgs.terminalKind === "debugConsole" || this.launchArgs.terminalKind === undefined) {
             spawnBashScript(
@@ -179,7 +181,6 @@ export class BashDebugSession extends LoggingDebugSession {
                 }
             });
         }
-
         await this.onDebuggerAvailable();
 
         this.processDebugTerminalOutput();

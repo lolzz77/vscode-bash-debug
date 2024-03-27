@@ -62,7 +62,7 @@ export function validatePath(cwd: string,
     // but i can do is `return `${pathBash}``
     // lol
     // cwd - /workspace
-    // pathBash - make -f
+    // pathBash - make
     // pathBashdb - /workspace/vscode-bash-debug/bashdb_dir/makefiledb.mk
     // pathcat - cat
     // pathMkfifo - mkfifo
