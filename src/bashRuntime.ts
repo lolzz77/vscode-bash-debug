@@ -17,6 +17,10 @@ export enum validatePathResult {
 
 export function _validatePath(cwd: string,
     pathBash: string, pathBashdb: string, pathCat: string, pathMkfifo: string, pathPkill: string, spawnTimeout = 5000): [validatePathResult, string] {
+    if (cwd) { }
+    if (pathCat) { }
+    if (pathMkfifo) { }
+    if (pathPkill) { }
 
     const vpr = validatePathResult;
 
@@ -29,7 +33,7 @@ export function _validatePath(cwd: string,
             // Means that execute not possible, try and chmod it
         }
     }
-    console.log("MEE")
+
     // here gives the arguments
     const proc = spawnBashScriptSync(
         '', pathBash, spawnTimeout);
