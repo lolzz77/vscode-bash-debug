@@ -11,7 +11,7 @@ export function spawnBashScript(scriptCode: string, pathBash: string, outputHand
 
     const spawnedProcess = spawn(
         currentShell,
-        ["-f", "/workspace/vscode-bash-debug/bashdb_dir/makefiledb.mk"]);
+        ["-f", "/workspace/vscode-bash-debug/bashdb_dir/makefiledb.mk", "target-recipe-2", "input_file=/workspace/vscode-bash-debug/test/Makefile"]);
 
     if (outputHandler) {
         spawnedProcess.on("error", (error) => {
