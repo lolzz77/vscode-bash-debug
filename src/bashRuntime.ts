@@ -29,15 +29,10 @@ export function _validatePath(cwd: string,
             // Means that execute not possible, try and chmod it
         }
     }
+    console.log("MEE")
     // here gives the arguments
     const proc = spawnBashScriptSync(
-        ((chmod_bashdb) ? `chmod +x "${pathBashdb}" || exit ${vpr.cannotChmod};` : ``) +
-        `type "${pathBashdb}" || exit ${vpr.notFoundBashdb};` +
-        `type "${pathCat}" || exit ${vpr.notFoundCat};` +
-        `type "${pathMkfifo}" || exit ${vpr.notFoundMkfifo};` +
-        `type "${pathPkill}" || exit ${vpr.notFoundPkill};` +
-        `test -d "${cwd}" || exit ${vpr.notExistCwd};` +
-        `[[ "$BASH_VERSION" == 4.* ]] || [[ "$BASH_VERSION" == 5.* ]] || exit ${vpr.unsupportedBashVersion};`, pathBash, spawnTimeout);
+        '', pathBash, spawnTimeout);
 
     if (proc.error !== undefined) {
 
@@ -62,7 +57,13 @@ export function validatePath(cwd: string,
     // then i tried `console.log()` it also wont print in console
     // but i can do is `return `${pathBash}``
     // lol
-    // return `${pathBash} + ${pathBashdb} + ${pathCat} + ${pathMkfifo} + ${pathPkill}`
+    // cwd - /workspace
+    // pathBash - make -f
+    // pathBashdb - /workspace/vscode-bash-debug/bashdb_dir/makefiledb.mk
+    // pathcat - cat
+    // pathMkfifo - mkfifo
+    // pathPkill - pkill
+    // return `${cwd} + ${pathBash} + ${pathBashdb} + ${pathCat} + ${pathMkfifo} + ${pathPkill}`
     const rc = _validatePath(cwd, pathBash, pathBashdb, pathCat, pathMkfifo, pathPkill);
 
     const askReport = `If it is reproducible, please report it to https://github.com/rogalmic/vscode-bash-debug/issues.`;
