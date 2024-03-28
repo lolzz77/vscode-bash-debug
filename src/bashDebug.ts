@@ -107,31 +107,22 @@ export class BashDebugSession extends LoggingDebugSession {
             args.programEffective = args.program;
         }
 
-        const errorMessage = validatePath(
-            args.cwdEffective, args.pathBash, args.pathBashdb, args.pathCat, args.pathMkfifo, args.pathPkill);
+        // const errorMessage = validatePath(
+        //     args.cwdEffective, args.pathBash, args.pathBashdb, args.pathCat, args.pathMkfifo, args.pathPkill);
 
-        if (errorMessage !== "") {
-            response.success = false;
-            response.message = errorMessage;
-            this.sendResponse(response);
-            return;
-        }
+        // if (errorMessage !== "") {
+        //     response.success = false;
+        //     response.message = errorMessage;
+        //     this.sendResponse(response);
+        //     return;
+        // }
 
         const fifo_path = "/tmp/vscode-bash-debug-fifo-" + (Math.floor(Math.random() * 10000) + 10000);
 
         // http://tldp.org/LDP/abs/html/io-redirection.html
         this.proxyProcess = spawnBashScript(
-            `function cleanup()
-		{
-			exit_code=$?
-			trap '' ERR SIGINT SIGTERM EXIT
-			exec 4>&-
-			rm "${fifo_path}_in"
-			rm "${fifo_path}"
-			exit $exit_code
-		}
+            `
 		echo "::PROXYID::$$" >&2
-		trap 'cleanup' ERR SIGINT SIGTERM EXIT
 		mkfifo "${fifo_path}"
 		mkfifo "${fifo_path}_in"
 
@@ -139,29 +130,23 @@ export class BashDebugSession extends LoggingDebugSession {
 		exec 4>"${fifo_path}"
 		"${args.pathCat}" >"${fifo_path}_in"`
                 .replace("\r", ""),
-            this.launchArgs.pathBash,
-            (data, category) => {
-                if (args.showDebugOutput || category === "console") {
-                    this.sendEvent(new OutputEvent(`${data}`, category));
-                }
-            });
+            this.launchArgs.pathBash);
 
         this.proxyProcess.stdin?.write(`examine Debug environment: bash_ver=$BASH_VERSION, bashdb_ver=$_Dbg_release, program=$0, args=$*\nprint "$PPID"\nhandle INT stop\nprint '${BashDebugSession.END_MARKER}'\n`);
 
-        const envVars = Object.keys(this.launchArgs.env)
-            .map(e => `export ${e}='${this.launchArgs.env[e]}';`)
-            .reduce((prev, next) => prev + next, ``);
+        // const envVars = Object.keys(this.launchArgs.env)
+        //     .map(e => `export ${e}='${this.launchArgs.env[e]}';`)
+        //     .reduce((prev, next) => prev + next, ``);
 
         const command = this.joinCommands(
-            `${envVars}cd "${args.cwdEffective}"`,
+            `cd "${args.cwdEffective}"`,
             `while [[ ! -p "${fifo_path}" ]]; do sleep 0.25; done`,
             `"${args.pathBash}" "${args.pathBashdb}" --quiet --tty "${fifo_path}" --tty_in "${fifo_path}_in" --library "${args.pathBashdbLib}" -- "${args.programEffective}" ${quote(args.args)} ${args.argsString}`);
 
         if (this.launchArgs.terminalKind === "debugConsole" || this.launchArgs.terminalKind === undefined) {
             spawnBashScript(
                 command,
-                this.launchArgs.pathBash,
-                (data, category) => this.sendEvent(new OutputEvent(`${data}`, category)));
+                this.launchArgs.pathBash);
         }
         else {
             const currentShell = (process.platform === "win32") ? getWSLLauncherPath(true) : args.pathBash;
